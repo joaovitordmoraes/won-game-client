@@ -21,6 +21,7 @@ describe('<Button />', () => {
         border: 0;
         border-radius: 0.4rem;
         padding: 0.8rem;
+        cursor: pointer;
         height: 4rem;
         font-size: 1.4rem;
         padding: 0.8rem 3.2rem;
