@@ -14,27 +14,7 @@ describe('<Button />', () => {
       'font-size': '1.4rem'
     })
 
-    expect(container.firstChild).toMatchInlineSnapshot(`
-      .c0 {
-        background: linear-gradient(180deg,#ff5f5f 0%,#f062c0 50%);
-        color: #FAFAFA;
-        border: 0;
-        border-radius: 0.4rem;
-        padding: 0.8rem;
-        cursor: pointer;
-        height: 4rem;
-        font-size: 1.4rem;
-        padding: 0.8rem 3.2rem;
-      }
-
-      <button
-        class="c0"
-      >
-        <span>
-          Buy now
-        </span>
-      </button>
-    `)
+    expect(container.firstChild).toMatchSnapshot()
   })
 
   it('should render the small button', () => {
@@ -71,5 +51,18 @@ describe('<Button />', () => {
 
     expect(screen.getByText(/buy now/i)).toBeInTheDocument()
     expect(screen.getByTestId('icon')).toBeInTheDocument()
+  })
+
+  it('should render button as a link', () => {
+    renderWithTheme(
+      <Button as="a" href="/link">
+        Buy now
+      </Button>
+    )
+
+    expect(screen.getByRole('link', { name: /buy now/i })).toHaveAttribute(
+      'href',
+      '/link'
+    )
   })
 })
