@@ -39,7 +39,7 @@ describe('<Menu />', () => {
 
     expect(screen.queryByText(/my account/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/wishlist/i)).not.toBeInTheDocument()
-    expect(screen.getByText(/log in now/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/sign in/i)).toHaveLength(2)
     expect(screen.getByText(/sign up/i)).toBeInTheDocument()
   })
 
@@ -51,7 +51,7 @@ describe('<Menu />', () => {
 
     //nesse caso onde podemos ou não ter o elemento no documento precisamos utilizar o queryByText ou invés do getByText
     //o getByText precisa encontrar o elemento, caso não exista o teste quebra
-    expect(screen.queryByText(/log in now/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/sign in/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/sign up/i)).not.toBeInTheDocument()
   })
 })
