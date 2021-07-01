@@ -51,6 +51,12 @@ describe('<GameDetails />', () => {
     expect(screen.getByText(/Walkabout/i)).toBeInTheDocument()
   })
 
+  it('should render the developer', () => {
+    renderWithTheme(<GameDetails {...props} />)
+
+    expect(screen.getByText(/Different Tales/i)).toBeInTheDocument()
+  })
+
   it('should render the formated date', () => {
     renderWithTheme(<GameDetails {...props} />)
 
