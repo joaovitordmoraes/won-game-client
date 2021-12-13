@@ -1,13 +1,15 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithTheme } from 'utils/tests/helpers'
+import { css } from 'styled-components'
 
 import ExploreSidebar from '.'
+import { Overlay } from './styles'
 
 import items from './mock'
 
 describe('<ExploreSidebar />', () => {
-  it('should render the headings', () => {
+  it('should render headings', () => {
     renderWithTheme(<ExploreSidebar items={items} onFilter={jest.fn} />)
 
     expect(screen.getByRole('heading', { name: /price/i })).toBeInTheDocument()
@@ -30,7 +32,7 @@ describe('<ExploreSidebar />', () => {
     ).toBeInTheDocument()
   })
 
-  it('should render filter button', () => {
+  it('should render the filter button', () => {
     renderWithTheme(<ExploreSidebar items={items} onFilter={jest.fn} />)
 
     expect(screen.getByRole('button', { name: /filter/i })).toBeInTheDocument()
@@ -40,8 +42,8 @@ describe('<ExploreSidebar />', () => {
     renderWithTheme(
       <ExploreSidebar
         items={items}
-        initialValues={{ windows: true, sort_by: 'low-to-high' }}
         onFilter={jest.fn}
+        initialValues={{ windows: true, sort_by: 'low-to-high' }}
       />
     )
 
@@ -63,10 +65,7 @@ describe('<ExploreSidebar />', () => {
 
     userEvent.click(screen.getByRole('button', { name: /filter/i }))
 
-    expect(onFilter).toBeCalledWith({
-      windows: true,
-      sort_by: 'low-to-high'
-    })
+    expect(onFilter).toBeCalledWith({ windows: true, sort_by: 'low-to-high' })
   })
 
   it('should filter with checked values', () => {
@@ -75,12 +74,14 @@ describe('<ExploreSidebar />', () => {
     renderWithTheme(<ExploreSidebar items={items} onFilter={onFilter} />)
 
     userEvent.click(screen.getByLabelText(/windows/i))
+    userEvent.click(screen.getByLabelText(/linux/i))
     userEvent.click(screen.getByLabelText(/low to high/i))
 
     userEvent.click(screen.getByRole('button', { name: /filter/i }))
 
     expect(onFilter).toBeCalledWith({
       windows: true,
+      linux: true,
       sort_by: 'low-to-high'
     })
   })
@@ -95,8 +96,31 @@ describe('<ExploreSidebar />', () => {
 
     userEvent.click(screen.getByRole('button', { name: /filter/i }))
 
-    expect(onFilter).toBeCalledWith({
-      sort_by: 'high-to-low'
-    })
+    expect(onFilter).toBeCalledWith({ sort_by: 'high-to-low' })
+  })
+
+  it('should open/close sidebar when filtering on mobile ', () => {
+    const { container } = renderWithTheme(
+      <ExploreSidebar items={items} onFilter={jest.fn} />
+    )
+
+    const variant = {
+      media: '(max-width:768px)',
+      modifier: String(css`
+        ${Overlay}
+      `)
+    }
+
+    const Element = container.firstChild
+
+    expect(Element).not.toHaveStyleRule('opacity', '1', variant)
+
+    userEvent.click(screen.getByLabelText(/open filters/))
+
+    expect(Element).toHaveStyleRule('opacity', '1', variant)
+
+    userEvent.click(screen.getByLabelText(/close filters/))
+
+    expect(Element).not.toHaveStyleRule('opacity', '1', variant)
   })
 })
