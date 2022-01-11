@@ -5,6 +5,7 @@ import { renderWithTheme } from 'utils/tests/helpers'
 import GameCard from '.'
 
 const props = {
+  slug: 'population-zero',
   title: 'Population Zero',
   developer: 'Rockstar Games',
   img: 'https://source.unsplash.com/user/willianjusten/300x140',
@@ -13,7 +14,7 @@ const props = {
 
 describe('<GameCard />', () => {
   it('should render correctly', () => {
-    renderWithTheme(<GameCard {...props} />)
+    const { container } = renderWithTheme(<GameCard {...props} />)
 
     expect(
       screen.getByRole('heading', { name: props.title })
@@ -28,9 +29,14 @@ describe('<GameCard />', () => {
       props.img
     )
 
-    expect(screen.getByText(props.price)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: props.title })).toHaveAttribute(
+      'href',
+      `/game/${props.slug}`
+    )
 
     expect(screen.getByLabelText(/add to wishlist/i)).toBeInTheDocument()
+
+    expect(container.firstChild).toMatchSnapshot()
   })
 
   it('should render price in label', () => {
@@ -60,15 +66,16 @@ describe('<GameCard />', () => {
     expect(screen.getByLabelText(/remove from wishlist/i)).toBeInTheDocument()
   })
 
-  it('should render call onFav method when favorite is clicked', () => {
+  it('should call onFav method when favorite is clicked', () => {
     const onFav = jest.fn()
     renderWithTheme(<GameCard {...props} favorite onFav={onFav} />)
 
     fireEvent.click(screen.getAllByRole('button')[0])
+
     expect(onFav).toBeCalled()
   })
 
-  it('should render a Ribbon', () => {
+  it('should render Ribbon', () => {
     renderWithTheme(
       <GameCard
         {...props}
@@ -77,8 +84,7 @@ describe('<GameCard />', () => {
         ribbonSize="small"
       />
     )
-
-    const ribbon = screen.getByText(/My Ribbon/i)
+    const ribbon = screen.getByText(/my ribbon/i)
 
     expect(ribbon).toHaveStyle({ backgroundColor: '#3CD3C1' })
     expect(ribbon).toHaveStyle({ height: '2.6rem', fontSize: '1.2rem' })
