@@ -11,7 +11,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject>
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: new HttpLink({ uri: 'http://localhost:1337/graphql' }),
+    link: new HttpLink({ uri: 'https://wongamesapi.herokuapp.com/graphql' }),
     cache: new InMemoryCache()
   })
 }
